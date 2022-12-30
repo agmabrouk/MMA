@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  mma.grpc.server:
+    container_name: mmagrpcserver
+    image: ${DOCKER_REGISTRY-}mmaserver
+    ports:
+    - 6570:6570
+    - 6571:6571
+    build:
+      context: .
+      dockerfile: mma.grpc.server/Dockerfile
+    network_mode: host
+  mma.grpc.client:
+    container_name: mmagrpcclient
+    image: ${DOCKER_REGISTRY-}mmagrpcclient
+    ports:
+    - 6668:6668
+    depends_on:
+    - mma.grpc.server
+    build:
+      context: .
+      args:
+        serverip : "127.0.0.1"
+        serverport : "6571"
+      dockerfile: mma.grpc.client/Dockerfile
+    network_mode: host

@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  mma.orleans.client:
+    image: ${DOCKER_REGISTRY-}mmaorleansclient
+    build:
+      context: .
+      dockerfile: mma.orleans.client/Dockerfile
+
+  mma.orleans.server:
+    image: ${DOCKER_REGISTRY-}mmaorleansserver
+    build:
+      context: .
+      dockerfile: mma.orleans.server/Dockerfile
+

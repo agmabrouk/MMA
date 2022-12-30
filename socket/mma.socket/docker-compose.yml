@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  mma.socket.server:
+    container_name: mmaserver
+    image: ${DOCKER_REGISTRY-}mmaserver
+    ports:
+    - "6565:6565"
+    build:
+      context: .
+      dockerfile: mma.server/Dockerfile
+    network_mode: host
+  mma.socket.client:
+    container_name: mmaclient
+    image: ${DOCKER_REGISTRY-}mmaclient
+    ports:
+    - "6666:6666"
+    depends_on:
+    - mma.socket.server
+    build:
+      context: .
+      args:
+        serverip : "127.0.0.1"
+        serverport : "6565"
+      dockerfile: mma.client/Dockerfile
+    network_mode: host
+      
+    

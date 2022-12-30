@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "mma.orleans.server": {
+      "commandName": "Project"
+    }
+  }
+}

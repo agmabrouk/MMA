@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "mma.rest.client": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+option csharp_namespace = "mma.grpc.server";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service mmaChatService {
+  rpc SendMessage (SendMessageRequest) returns (SendMessageReply);
+  rpc SendCommand (SendCommandRequest) returns (SendCommandReply);
+  rpc StreamNotification (stream SendNotificationRequest) returns (stream SendNotificationReply);
+  rpc SendMessageStream (stream SendMessageRequest) returns (google.protobuf.Empty);
+  rpc RecieveMessageStream (RecieveMessageStreamRequest) returns (stream RecieveMessageStreamReply);
+  rpc SendHSMessage (SendHSMessageRequest) returns (SendHSMessageReply);
+}
+
+message SendNotificationRequest {
+	mmaRequestHeader RequestHeader = 1;
+	mmaNotifcationMessage NotificationMessage = 2;
+}
+
+message SendNotificationReply {
+	mmaReplyHeader ReplyHeader = 1;
+	mmaAcknowledgeMessage ACKMessage = 2;
+}
+
+message RecieveMessageStreamRequest{
+	mmaRequestHeader RequestHeader = 1;
+	google.protobuf.Timestamp LastSyncDateTime = 2;
+}
+
+message RecieveMessageStreamReply{
+	mmaReplyHeader ReplyHeader = 1;
+	mmaChatMessage Message=2;
+}
+
+
+message SendCommandRequest {
+	mmaRequestHeader RequestHeader = 1;
+	mmaCommandMessage CommandMessage = 2;
+}
+
+message SendMessageReply {
+	mmaReplyHeader ReplyHeader = 1;
+	mmaAcknowledgeMessage ACKMessage = 2;
+}
+
+message SendMessageRequest {
+	mmaRequestHeader RequestHeader = 1;
+	mmaChatMessage ChatMessage = 2;
+}
+message SendHSMessageRequest {
+	mmaRequestHeader RequestHeader = 1;
+	mmaHandShakeMessage HSMessage = 2;
+}
+
+message SendHSMessageReply {
+	mmaReplyHeader ReplyHeader = 1;
+	mmaAcknowledgeMessage ACKMessage = 2;
+	string HSReplyMessage = 3;
+}
+
+message SendCommandReply {
+	mmaReplyHeader ReplyHeader = 1;
+	mmaAcknowledgeMessage ACKMessage = 2;
+}
+
+message mmaReplyHeader {
+	string ServerName = 1;
+	string ServerId = 2;
+	google.protobuf.Timestamp ServerTime = 3;
+	string GeneralChatRoomId=4;
+}
+
+
+message mmaRequestHeader {
+	string ClientId = 1;
+	string ClientName = 2;
+	google.protobuf.Timestamp SentTime = 3;
+}
+
+message mmaChatRoom {
+	string id = 1;
+	repeated mmaChatMessage ChatRoomMessages = 2;
+	string ChatRoomName = 3;
+	google.protobuf.Timestamp CreationTime = 4;
+	bool isActive = 5;
+	repeated mmaClient ChatRoomClients = 6;
+}
+
+message mmaClient{
+	string Name = 1 ;
+	string ClientId = 2 ;
+	string ActiveChatRoom = 3;
+	google.protobuf.Timestamp LastSyncDateTime=4;
+}
+
+message mmaChatMessage {
+	string MessageId = 1;
+    google.protobuf.Timestamp SentTime = 2;
+	google.protobuf.Timestamp ReceivedTime = 3;
+	string MessageText = 4;
+	string UserName = 5;
+	string ClientId = 6;
+	string ChatRoomId = 7;
+}
+
+message mmaHandShakeMessage {
+	string MessageId = 1;
+    google.protobuf.Timestamp SentTime = 2;
+	string MessageText = 3;
+	string ClientId = 4;
+	string ClientName = 5;
+}
+
+
+message mmaAcknowledgeMessage {
+	string MessageId = 1;
+    google.protobuf.Timestamp SentTime = 2;
+	mmaRequestStatus Status = 3;
+	string AckString = 4;
+}
+
+
+enum mmaRequestStatus {
+	SUCCESS = 0;
+	FAILED = 1;
+	PENDING = 3;
+	CANCELED = 4;
+}
+
+
+enum mmaSystemMessageTypes{
+	NotifcationMessage_Type= 0;
+	HandShakeMessage_Type = 1;
+	ChatMessage_Type = 2;
+	AcknowledgeMessage_Type = 3;
+}
+
+
+message mmaCommandMessage{
+	mmaCommands CommandType = 1;
+	string CommandParameters = 2;
+	google.protobuf.Timestamp SentTime = 3;
+}
+
+enum mmaCommands {
+  GET_MENU = 0;
+  SHOW_ACTIVE_CHATROOMS = 1;
+  SHOW_MY_CHATROOMS = 2;
+  LEAVE_ALL_CHATROOMS = 3;
+  LEAVE_CHATROOM = 4;
+  CREATE_NEW_CHATROOM = 5;
+  JOIN_ACTIVE_CHATROOM = 6;
+}
+
+message mmaNotifcationMessage{
+	mmaNotifications NotificationType =1;
+	string NotificationText =2;
+	google.protobuf.Timestamp SentTime = 3;
+}
+
+enum mmaNotifications {
+  CLIENT_NOTIFICATION = 0;
+  GENERAL_NOTIFICATION = 1;
+}

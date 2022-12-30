@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "mma.orleans.client": {
+      "commandName": "Project"
+    }
+  }
+}

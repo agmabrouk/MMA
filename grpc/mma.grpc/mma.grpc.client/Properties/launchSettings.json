@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "mma.grpc.client": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

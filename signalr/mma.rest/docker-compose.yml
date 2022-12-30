@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  mma.rest.server:
+    container_name: mmarestserver
+    image: ${DOCKER_REGISTRY-}mmarestserver
+    ports:
+    - "6869:6869"
+    - "6868:6868"
+    build:
+      context: .
+      dockerfile: mma.rest.server2/Dockerfile
+    network_mode: host
+  mma.rest.client:
+    container_name: mmarestclient
+    image: ${DOCKER_REGISTRY-}mmarestclient
+    ports:
+    - "6870:6870"
+    depends_on:
+    - mma.rest.server
+    build:
+      context: .
+      args:
+        serverip : "127.0.0.1"
+        serverport : "6869"
+      dockerfile: mma.rest.client/Dockerfile
+    network_mode: host
+      
